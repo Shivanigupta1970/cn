@@ -1,0 +1,50 @@
+def dijkstra(graph, start):
+    # Create a dictionary to store the shortest distances from the start node to each node
+    distances = {node: float('infinity') for node in graph}
+    distances[start] = 0
+    
+    unvisited_nodes = list(graph)
+    
+    while unvisited_nodes:
+        # Find the node with the smallest known distance
+        min_distance = float('infinity')
+        for node in unvisited_nodes:
+            if distances[node] < min_distance:
+                min_distance = distances[node]
+                current_node = node
+        
+        if min_distance == float('infinity'):
+            break
+
+        unvisited_nodes.remove(current_node)
+
+        # Update distances for neighbors
+        for neighbor, weight in graph[current_node].items():
+            distance = min_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+
+    return distances
+
+# User input for the graph
+graph = {}
+num_nodes = int(input("Enter the number of nodes: "))
+
+for i in range(num_nodes):
+    node_name = input(f"Enter the name of node {i + 1}: ")
+    neighbors = {}
+    while True:
+        neighbor = input(f"Enter a neighbor of node {node_name} (or press Enter to stop): ")
+        if not neighbor:
+            break
+        weight = float(input(f"Enter the weight from {node_name} to {neighbor}: "))
+        neighbors[neighbor] = weight
+    graph[node_name] = neighbors
+
+# User input for the start node
+start_node = input("Enter the start node: ")
+
+shortest_distances = dijkstra(graph, start_node)
+
+for node, distance in shortest_distances.items():
+    print(f'Shortest distance from {start_node} to {node} is {distance}')
